@@ -1,0 +1,18 @@
+#!/usr/bin/env php
+<?php
+
+use Psalm\Config;
+use Psalm\Internal\Analyzer\ProjectAnalyzer;
+use Psalm\Internal\Provider\FileProvider;
+use Psalm\Internal\Provider\Providers;
+use Psalm\Type;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+new ProjectAnalyzer(
+    Config\Creator::createBareConfig(__DIR__ . '/../', null, __DIR__ . '/../vendor'),
+    new Providers(new FileProvider())
+);
+$input = fgets(STDIN);
+$type = Type::parseString($input);
+echo $type->getId();

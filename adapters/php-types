@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+
+use PhpTypes\ClassType;
+use PhpTypes\Scope;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$input = fgets(STDIN);
+$scope = Scope::new();
+$scope->register('Foo', new ClassType('Foo'));
+$scope->register('Bar', new ClassType('Bar'));
+echo $scope->parse($input);
