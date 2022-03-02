@@ -55,7 +55,7 @@ I'm looking for your help, specifically:
   this very project. If you come up with a clever name for it, I have no problem
   at all with changing it at this point. 
 
-[^php-types] [`adapters/php-types`](https://github.com/MidnightDesign/php-types)
+[^php-types]: [`adapters/php-types`](https://github.com/MidnightDesign/php-types)
   is my own little implementation of the type system. It's (deliberately) way
   stricter and opinionated than PHPStan, Psalm and PhpStorm - for example, it
   only accepts the explicit `array<K, V>` syntax, but not the implicit `T[]`
