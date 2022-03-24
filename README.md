@@ -39,6 +39,9 @@ same thing and trying to make them compatible.
 
 In our world, a common test suite is the next best thing.
 
+Non-goal: This package is not intended to test static analysis capabilities.
+Just the type system.
+
 ## Please help
 
 I'm looking for your help, specifically:
