@@ -1,11 +1,10 @@
 <?php
 
-namespace Midnight\PhpTypeSystemTests;
+namespace Midnight\PhpTypesystemTests;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
-use function array_key_exists;
 use function explode;
 use function fclose;
 use function fgets;
@@ -14,8 +13,9 @@ use function preg_match;
 use function sprintf;
 use function str_starts_with;
 use function substr;
+use function trim;
 
-final class CanonicalizationTestsuite
+final class TypeCompatibilityTestsuite
 {
     public function __construct(private OutputInterface $output, private string $command)
     {
@@ -23,7 +23,13 @@ final class CanonicalizationTestsuite
 
     public function run(): void
     {
-        $handle = fopen(__DIR__ . '/../tests/canonicalize.md', 'rb');
+        $this->processFile(__DIR__ . '/../tests/compatible-types.md');
+        $this->processFile(__DIR__ . '/../tests/incompatible-types.md');
+    }
+
+    private function processFile(string $file): void
+    {
+        $handle = fopen($file, 'rb');
         $passes = 0;
         $failures = 0;
 
@@ -46,29 +52,29 @@ final class CanonicalizationTestsuite
             }
 
             if (str_starts_with($line, '- ')) {
-                preg_match('/^- `(.+?)`( -> `(.+)`)?$/', $line, $matches);
-
-                if (array_key_exists(3, $matches)) {
-                    $from = $matches[1];
-                    $to = $matches[3];
-                } else {
-                    $from = $matches[1];
-                    $to = $matches[1];
-                }
-
-                $process = new Process(explode(' ', $this->command), null, null, "canonicalize\n" . $from);
+                preg_match('/^- `(.+?)` (.+) `(.+)`$/', $line, $matches);
+                $super = $matches[1];
+                $expected = $matches[2] === 'accepts' ? 'true' : 'false';
+                $sub = $matches[3];
+                $process = new Process(
+                    explode(' ', $this->command),
+                    null,
+                    null,
+                    "compatibility\n" . $super . "\n" . $sub
+                );
                 $process->run();
                 $output = $process->getOutput();
+                $caseText = substr($line, 2);
 
                 if (!$process->isSuccessful()) {
                     if ($output === '') {
-                        $this->output->writeln(sprintf('<error>"%s" failed with no output</error>', $from));
+                        $this->output->writeln(sprintf('<error>"%s" failed with no output</error>', $caseText));
                     } else {
                         if ($this->output->isVerbose()) {
-                            $this->output->writeln(sprintf('<error>"%s" failed:</error>', $from));
+                            $this->output->writeln(sprintf('<error>"%s" failed:</error>', $caseText));
                             $this->output->writeln($output);
                         } else {
-                            $this->output->writeln(sprintf('<error>"%s" failed</error>', $from));
+                            $this->output->writeln(sprintf('<error>"%s" failed</error>', $caseText));
                         }
                     }
 
@@ -76,12 +82,12 @@ final class CanonicalizationTestsuite
                     continue;
                 }
 
-                if ($output === $to) {
-                    $this->output->writeln(sprintf('<info>%s</info>', substr($line, 2)));
+                if ($output === $expected) {
+                    $this->output->writeln(sprintf('<info>%s</info>', $caseText));
                     $passes++;
                 } else {
                     $this->output->writeln(
-                        sprintf('<error>"%s" failed. Expected "%s", got "%s"</error>', $from, $to, $output)
+                        sprintf('<error>"%s" failed. Expected "%s", got "%s"</error>', $caseText, $expected, $output)
                     );
                     $failures++;
                 }

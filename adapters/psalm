@@ -9,10 +9,23 @@ use Psalm\Type;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-new ProjectAnalyzer(
+$analyzer = new ProjectAnalyzer(
     Config\Creator::createBareConfig(__DIR__ . '/../', null, __DIR__ . '/../vendor'),
     new Providers(new FileProvider())
 );
-$input = fgets(STDIN);
-$type = Type::parseString($input);
-echo $type->getId();
+
+$mode = readLine();
+
+switch ($mode) {
+    case 'canonicalize':
+        echo Type::parseString(readLine())->getId();
+        break;
+    case 'compatibility':
+        $super = Type::parseString(readLine());
+        $sub = Type::parseString(readLine());
+        echo $analyzer->getCodebase()->isTypeContainedByType($sub, $super) ? 'true' : 'false';
+        break;
+    default:
+        echo \Safe\sprintf('Unknown mode "%s"', $mode);
+        exit(1);
+}

@@ -6,8 +6,22 @@ use PhpTypes\Scope;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$input = fgets(STDIN);
-$scope = Scope::new();
-$scope->register('Foo', new ClassType('Foo'));
-$scope->register('Bar', new ClassType('Bar'));
-echo $scope->parse($input);
+$mode = readLine();
+switch ($mode) {
+    case 'canonicalize':
+        $input = readLine();
+        $scope = Scope::new();
+        $scope->register('Foo', new ClassType('Foo'));
+        $scope->register('Bar', new ClassType('Bar'));
+        echo $scope->parse($input);
+        break;
+    case 'compatibility':
+        $scope = Scope::new();
+        $super = $scope->parse(readLine());
+        $sub = $scope->parse(readLine());
+        echo $super->isSupertypeOf($sub) ? 'true' : 'false';
+        break;
+    default:
+        echo \Safe\sprintf('Unknown mode "%s"', $mode);
+        exit(1);
+}

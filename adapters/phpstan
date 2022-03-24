@@ -10,12 +10,26 @@ use PHPStan\Type\VerbosityLevel;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$input = fgets(STDIN);
 $container = (new ContainerFactory(__DIR__))->create(sys_get_temp_dir(), [], []);
 $resolver = new TypeStringResolver(
     new Lexer(),
     new TypeParser(),
     $container->getByType(TypeNodeResolver::class),
 );
-$type = $resolver->resolve($input);
-echo $type->describe(VerbosityLevel::precise());
+
+$mode = readLine();
+
+switch ($mode) {
+    case 'canonicalize':
+        $input = readLine();
+        echo $resolver->resolve($input)->describe(VerbosityLevel::precise());
+        break;
+    case 'compatibility':
+        $super = $resolver->resolve(readLine());
+        $sub = $resolver->resolve(readLine());
+        echo $super->accepts($sub, true)->yes() ? 'true' : 'false';
+        break;
+    default:
+        echo \Safe\sprintf('Unknown mode "%s"', $mode);
+        exit(1);
+}

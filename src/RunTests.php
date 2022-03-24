@@ -23,8 +23,9 @@ final class RunTests extends Command
         $this->addArgument('cmd', InputArgument::REQUIRED);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        (new TypeCompatibilityTestsuite($output, $input->getArgument('cmd')))->run();
         (new CanonicalizationTestsuite($output, $input->getArgument('cmd')))->run();
 
         return 0;
