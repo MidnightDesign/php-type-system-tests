@@ -30,6 +30,7 @@
 - `bool|int|string` accepts `string|int`
 - `string|null` accepts `string`
 - `string|null` accepts `null`
+- `string|float` accepts `string|int`
 
 # Callables
 - `callable(string): void` accepts `callable(string|int): void`
@@ -95,10 +96,6 @@
 - `list<string|int>` accepts `array{int, string}`
 - `array<int, string>` accepts `array{string, string}`
 - `list` accepts `list<mixed>`
-
-# Classes
-- `Foo` accepts `Foo`
-- `FooInterface` accepts `Foo`
 
 # Parens
 - `(callable(): string)|string` accepts `string`

@@ -13,7 +13,6 @@
 
 # Union
 - `int|string` doesn't accept `string|int|bool`
-- `string|float` doesn't accept `string|int`
 - `string|float` doesn't accept `bool`
 
 # Callable
@@ -52,10 +51,4 @@
 - `iterable<string, int>` doesn't accept `iterable<string, float>`
 - `iterable<string, int>` doesn't accept `iterable<bool, int>`
 - `list` doesn't accept `float`
-- `string|null` doesn't accept `int`
 - `array<string, string>` doesn't accept `array{foo: int}`
-
-# Classes
-- `Foo` doesn't accept `FooInterface`
-- `FooInterface` doesn't accept `Popo`
-- `Foo` doesn't accept `string`

@@ -24,6 +24,9 @@ use WSL.
 
 You can also point it to your own adapter that accepts the same kind of input.
 
+By default, it only shows failing cases, but you can output results for all
+cases with the `-v` flag.  
+
 ## The goal
 
 I think it's awesome that the developers of all the static analyzers we use

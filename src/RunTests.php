@@ -25,8 +25,7 @@ final class RunTests extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        (new TypeCompatibilityTestsuite($output, $input->getArgument('cmd')))->run();
-        (new CanonicalizationTestsuite($output, $input->getArgument('cmd')))->run();
+        (new Runner($input->getArgument('cmd')))->run($output);
 
         return 0;
     }
